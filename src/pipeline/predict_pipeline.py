@@ -1,39 +1,44 @@
+# Now its' time to create a web app using Flask that uses model.pkl and makes new predictions.
+# So now let's create app.py
+
 import sys
+
 import pandas as pd
-from src.exception import CustomException
-from src.utils import load_object
+import numpy as np
 import os
 
+from src.exception import CustomException
+from src.logger import logging
+from src.utils import load_object
 
 class PredictPipeline:
     def __init__(self):
         pass
 
-    def predict(self,features):
+    def predict(self, features):
         try:
-            model_path=os.path.join("artifacts","model.pkl")
-            preprocessor_path=os.path.join('artifacts','preprocessor.pkl')
+            model_path = os.path.join('artifacts', 'model.pkl')
+            preprocessor_path = os.path.join('artifacts', 'preprocessor.pkl')
+            print("Before loading")
             model=load_object(file_path=model_path)
             preprocessor=load_object(file_path=preprocessor_path)
-            data_scaled=preprocessor.transform(features)
-            preds=model.predict(data_scaled)
+            print("After loading")
+            data_scaled = preprocessor.transform(features)
+            preds = model.predict(data_scaled)
             return preds
-        
         except Exception as e:
-            raise CustomException(e,sys)
-
-
+            raise CustomException(e, sys)
 
 class CustomData:
-    def __init__(  self,
-        gender: str,
-        race_ethnicity: str,
-        parental_level_of_education,
-        lunch: str,
-        test_preparation_course: str,
-        reading_score: int,
-        writing_score: int):
-
+    def __init__(self,
+                 gender: str,
+                 race_ethnicity: int,
+                 parental_level_of_education: str,
+                 lunch: str,
+                 test_preparation_course: str,
+                 reading_score: int,
+                 writing_score: int):
+        
         self.gender = gender
 
         self.race_ethnicity = race_ethnicity
@@ -64,4 +69,3 @@ class CustomData:
 
         except Exception as e:
             raise CustomException(e, sys)
-
